@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Quiz</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+      width: 320px;
+    }
+    .popup button { margin: 5px; }
+    #overlay {
+      display: none;
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to the Quiz</h1>
+  <button onclick="startQuiz()">Start Quiz</button>
+
+  <div id="overlay"></div>
+  <div class="popup" id="quizPopup">
+    <p id="question"></p>
+    <div id="answers"></div>
+  </div>
+
+  <script>
+    // Quiz questions
+    const quiz = [
+      {
+        question: "What is 2 + 2?",
+        options: [3, 4, 5],
+        correct: 1
+      },
+      {
+        question: "What is the capital of France?",
+        options: ["Berlin", "Madrid", "Paris"],
+        correct: 2
+      },
+      {
+        question: "Which planet is known as the Red Planet?",
+        options: ["Earth", "Mars", "Jupiter"],
+        correct: 1
+      }
+    ];
+
+    let currentQuestion = 0;
+
+    function startQuiz() {
+      document.getElementById('overlay').style.display = 'block';
+      document.getElementById('quizPopup').style.display = 'block';
+      showQuestion();
+    }
+
+    function showQuestion() {
+      let q = quiz[currentQuestion];
+      document.getElementById('question').innerText = q.question;
+
+      let answersDiv = document.getElementById('answers');
+      answersDiv.innerHTML = ""; // clear old buttons
+
+      q.options.forEach((option, i) => {
+        let btn = document.createElement("button");
+        btn.innerText = option;
+        btn.onclick = () => checkAnswer(i);
+        answersDiv.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selected) {
+      let q = quiz[currentQuestion];
+      if (selected === q.correct) {
+        alert("✅ Correct!");
+      } else {
+        alert("❌ Wrong! The correct answer was: " + q.options[q.correct]);
+      }
+
+      currentQuestion++;
+      if (currentQuestion < quiz.length) {
+        showQuestion();
+      } else {
+        endQuiz();
+      }
+    }
+
+    function endQuiz() {
+      document.getElementById('question').innerText = "🎉 Quiz finished!";
+      document.getElementById('answers').innerHTML =
+        "<button onclick='closeQuiz()'>Close</button>";
+    }
+
+    function closeQuiz() {
+      document.getElementById('quizPopup').style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
+      currentQuestion = 0; // reset for next time
+    }
+  </script>
+</body>
+</html>
